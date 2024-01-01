@@ -1,4 +1,4 @@
-package com.mhnasir.spark_jobs.sampleJob;
+package com.fileproc.spark_jobs.sampleJob;
 
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
