@@ -25,11 +25,9 @@ public class Test {
 
 	public static void main(String[] args) throws FileNotFoundException {
 
-		Test test = new Test();
+		ClassLoader classLoader = new Test().getClass().getClassLoader();
 
-//		test.getClass().getClassLoader().
-		Template template = Utils
-				.parseTemplateYamlFile(test.getClass().getClassLoader().getResourceAsStream("template.yaml"));
+		Template template = Utils.parseTemplateYamlFile(classLoader.getResourceAsStream("template.yaml"));
 
 		System.out.println(template);
 
@@ -42,7 +40,7 @@ public class Test {
 				.read()//
 				.option("header", true)//
 				.option("delimiter", template.getInputFileDelimiter())//
-				.csv("C:\\Users\\Keshore\\github\\mhnasir\\spark-jobs\\sampleJob\\src\\main\\resources\\sample.csv");
+				.csv(classLoader.getResource("sample.csv").getPath());
 
 		inputDf.show();
 
@@ -52,25 +50,26 @@ public class Test {
 
 			String fieldName = entry.getKey();
 			TemplateFields field = entry.getValue();
+			String nullCheckName = "RDZ_" + fieldName + "_NULL_CHECK";
+			String formatCheckName = "RDZ_" + fieldName + "_FORMAT_CHECK";
 
 			if (field.getDefaultValue() != null) {
 				parsedDf = parsedDf.withColumn(fieldName, functions.lit(field.getDefaultValue()));
 			} else {
 
 				// Handle if column itself is not present in file
-				parsedDf = parsedDf.withColumn("RDZ_NULL_CHECK", functions.when( //
+				parsedDf = parsedDf.withColumn(nullCheckName, functions.when( //
 						functions.col(field.getMandatory()).isNull(), //
 						functions.lit(field.getMandatory() + " is having null ")));
 
-				parsedDf = parsedDf.withColumn("RDZ_FORMAT_CHECK", functions.when( //
+				parsedDf = parsedDf.withColumn(formatCheckName, functions.when( //
 						functions.lit(field.getFormatExpr()).isNotNull()
 								.and(functions.expr(field.getFormatExpr()).isNull()),
 						functions.lit(field.getFormatExpr() + "format check failed")));
 
 				parsedDf = parsedDf.withColumn(fieldName,
 						functions.when(
-								functions.col("RDZ_NULL_CHECK").isNull()
-										.and(functions.col("RDZ_FORMAT_CHECK").isNull()),
+								functions.col(nullCheckName).isNull().and(functions.col(formatCheckName).isNull()),
 								functions.expr(field.getOutputExpression())));
 
 			}
