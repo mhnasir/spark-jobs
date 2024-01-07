@@ -1,0 +1,21 @@
+Attribute|Default|Position|Check|Foramt| PrefixDef|PrefixAtt|SufixDef|SufficDef|Regexpression|order
+File_Type=pipe
+SIDE		|L| ||||a		 ||
+ACCOUNT     ||1|M||3|GSP-	 |-P|
+DESCRIPTION ||2||||a         ||
+SECURITY    ||3||||a         ||
+AMOUNT      ||4|F|number||a        ||
+VAL_DATE	||8|B|MMDDYYYY||a||
+ENTRY_DATE	||9|F|MMDDYYYY||a||
+SIGN		||5||||a         ||
+REF1        ||6||||a         ||
+REF2		||7||||a         ||
+REFERENCE   ||REF1||REF2
+
+
+
+ACCOUNT|DESCRIPTION |SECURITY|AMOUNT|SIGN|REF1|REF2|VAL_DATE|ENTRY_DATE
+1234|SAMPLE1|XYZ|100|C|SAM|SAM-2|06081999|
+1234|SAMPLE1|XYZ|100|C|SAM|SAM-2|0608199|
+|SAMPLE1|XYZ|100|C|SAM|SAM-2|0608199|
+4567|SAMPLE1|XYZ|200|D|SAM|SAM-2|06081990|06081999

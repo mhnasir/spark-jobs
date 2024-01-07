@@ -1,0 +1,32 @@
+inputFileDelimiter: "|"
+outputFileDelimiter: "|"
+
+# https://spark.apache.org/docs/latest/sql-ref-datatypes.html
+# https://spark.apache.org/docs/latest/api/sql/index.html
+
+fields:
+   SIDE:
+      defaultValue: 'L'
+      mandatory:
+      formatExpr: 
+      dataType: StringType
+      outputExpression:
+   SUBACCT:
+      defaultValue:  
+      mandatory: ACCOUNT 
+      formatExpr: ACCOUNT
+      dataType: StringType
+      outputExpression: "'GSP-' || trim(ACCOUNT) || '-p'"
+   AMOUNT:
+      defaultValue: 
+      mandatory: AMOUNT
+      formatExpr: cast(AMOUNT as double)
+      dataType: FloatType
+      outputExpression: trim(AMOUNT)
+   TLM_ENTRY_DATE:
+      defaultValue: 
+      mandatory: ENTRY_DATE      
+      dataType: DateType
+      formatExpr: to_date(ENTRY_DATE, 'MMddyyyy')
+      outputExpression: date_format(to_date(ENTRY_DATE, 'MMddyyyy'), 'dd-MM-yyyy')
+   
